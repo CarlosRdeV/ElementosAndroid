@@ -2,16 +2,21 @@ package unitec.org.elementosandroid
 
 import android.content.Context
 import android.os.AsyncTask
+import android.widget.TextView
+import android.widget.Toast
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
 import org.springframework.web.client.RestTemplate
 
-class TareaCargaEstacion(private var ctx: Context?)
+class TareaCargaEstacion(private var ctx: Context?,private var estacion: Estacion?, private var activity: MainActivity?)
     : AsyncTask<Void,Void,Void>() {
 
     override fun onPostExecute(result: Void?) {
         //Despues de la gestion de la informacion, generalmente muestra informacion
-        super.onPostExecute(result)
+
+        activity?.findViewById<TextView>(R.id.txtActual)?.text=estacion?.temp_c
+        Toast.makeText(ctx,"temperatura actual "+estacion?.temp_c,Toast.LENGTH_LONG).show()
+        //super.onPostExecute(result)
     }
 
     override fun onPreExecute() {
@@ -35,7 +40,7 @@ class TareaCargaEstacion(private var ctx: Context?)
 
             val respuesta = restTemplate.getForObject(url, String::class.java)
 
-            // estacion = maper.readValue(respuesta, Estatus::class.java)
+           estacion = maper.readValue(respuesta, Estacion::class.java)
 
 
             println("DESPUES DE REST");
